@@ -1,0 +1,39 @@
+replicaCount: 2  # Aseguramos Alta Disponibilidad
+
+image:
+  repository: juanarillo/docker_practica
+  pullPolicy: IfNotPresent
+  tag: "flask_v2"
+
+redis:
+  image: redis:latest
+  persistence:
+    enabled: true
+    storageClass: standard  # Clase de almacenamiento del clúster
+    size: 1Gi
+
+resources:
+  requests:
+    memory: "128Mi"
+    cpu: "250m"
+  limits:
+    memory: "512Mi"
+    cpu: "500m"
+
+autoscaling:
+  enabled: true
+  minReplicas: 2
+  maxReplicas: 5
+  targetCPUUtilizationPercentage: 70  # Escalado cuando se supere el 70% del uso de CPU
+
+ingress:
+  enabled: true
+  className: nginx
+  hosts:
+    - host: flask-app.local
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
+
+secret:
+  redisPassword: "myStrongRedisPassword"
