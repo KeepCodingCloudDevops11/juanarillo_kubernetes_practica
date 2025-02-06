@@ -1,39 +1,36 @@
-replicaCount: 2  # Aseguramos Alta Disponibilidad
+# Configuración de la aplicación Flask
+flask:
+  image: "juanarillo/kubernetes_practica:v1"
+  replicas: 2
+  message: "¡Hola desde el Chart de Helm!"
+  cpuLimit: "500m"
+  memoryLimit: "256Mi"
 
-image:
-  repository: juanarillo/docker_practica
-  pullPolicy: IfNotPresent
-  tag: "flask_v2"
+# Configuración del servicio
+service:
+  type: NodePort 
+  port: 5000
 
+# Redis Configuración
 redis:
-  image: redis:latest
-  persistence:
+  image:
+    repository: redis
+    tag: 7.0
+  port: 6379
+  password: "mipassword" 
+  persistentVolume:
     enabled: true
-    storageClass: standard  # Clase de almacenamiento del clúster
     size: 1Gi
+    storageClass: standard
 
-resources:
-  requests:
-    memory: "128Mi"
-    cpu: "250m"
-  limits:
-    memory: "512Mi"
-    cpu: "500m"
-
-autoscaling:
-  enabled: true
+# HPA Configuración
+hpa:
+  enabled: false
   minReplicas: 2
   maxReplicas: 5
-  targetCPUUtilizationPercentage: 70  # Escalado cuando se supere el 70% del uso de CPU
+  cpuThreshold: 70
 
+# Ingress Configuración
 ingress:
   enabled: true
-  className: nginx
-  hosts:
-    - host: flask-app.local
-      paths:
-        - path: /
-          pathType: ImplementationSpecific
-
-secret:
-  redisPassword: "myStrongRedisPassword"
+  host: "flask-app.local"

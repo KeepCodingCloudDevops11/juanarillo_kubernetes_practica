@@ -1,36 +1,31 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Chart.Name }}-app
-  labels:
-    app: {{ .Chart.Name }}
+  name: flask-app
 spec:
-  replicas: {{ .Values.replicaCount }}
+  replicas: {{ .Values.flask.replicas }}
   selector:
     matchLabels:
-      app: {{ .Chart.Name }}
+      app: flask-app
   template:
     metadata:
       labels:
-        app: {{ .Chart.Name }}
+        app: flask-app
     spec:
       containers:
-        - name: flask-app
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
-          resources:
-            requests:
-              memory: {{ .Values.resources.requests.memory }}
-              cpu: {{ .Values.resources.requests.cpu }}
-            limits:
-              memory: {{ .Values.resources.limits.memory }}
-              cpu: {{ .Values.resources.limits.cpu }}
-          env:
-            - name: REDIS_HOST
-              value: "{{ .Chart.Name }}-redis"
-            - name: REDIS_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: {{ .Chart.Name }}-redis-secret
-                  key: redisPassword
-          ports:
-            - containerPort: 5000
+      - name: flask-app
+        image: {{ .Values.flask.image }}
+        ports:
+        - containerPort: 5000
+        env:
+        - name: FLASK_MESSAGE
+          value: "{{ .Values.flask.message }}"
+        - name: REDIS_HOST
+          value: "redis"
+        - name: REDIS_PORT
+          value: "6379"
+        - name: REDIS_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: redis-secret
+              key: redis-password

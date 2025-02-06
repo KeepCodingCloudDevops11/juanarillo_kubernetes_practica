@@ -1,6 +1,5 @@
 apiVersion: v2
-name: flask-app
-description: Despliegue de una aplicación Flask con Redis en Kubernetes usando Helm.
-type: application
-version: 0.1.0
-appVersion: "1.0"
+name: flask-redis-app
+description: Despliegue de la aplicación Flask con Redis en Kubernetes
+version: 1.0.0
+appVersion: "1.0.0"
