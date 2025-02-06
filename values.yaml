@@ -1,8 +1,8 @@
 # Configuración de la aplicación Flask
 flask:
-  image: "juanarillo/kubernetes_practica:v1"
+  image: "juanarillo/kubernetes_practica:v5"
   replicas: 2
-  message: "¡Hola desde el Chart de Helm!"
+  message: "Este texto es una variable desde values.yaml"
   cpuLimit: "500m"
   memoryLimit: "256Mi"
 
