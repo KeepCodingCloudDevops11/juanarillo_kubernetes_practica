@@ -6,8 +6,10 @@ Práctica de Juan Arillo para el módulo de **Contenedores: Más que VMs Kuberne
 
 [Descripción](#descripción)  
 [Requisitos](#requisitos)  
-[Pasos previos](#pasos-previos)
-[Funcionamiento](#funcionamiento)
+[Pasos previos](#pasos-previos)  
+[Funcionamiento](#funcionamiento)  
+[Ajustes](#ajustes)  
+[Finalización despliegue](#finalización-despliegue)
 
 ## DESCRIPCIÓN
 
@@ -106,3 +108,74 @@ La aplicación debe mostrar un texto variable al principio (establecido en el fi
     Your browser does not support the video tag.
     </video>
 </p>
+
+## AJUSTES
+
+El fichero `values.yaml` presenta diferentes variables que nos permite personalizar nuestro despliegue:
+
+**Sección flask:**
+
+Esta parte define la configuración principal de la aplicación Flask.
+
+- image: Especifica la imagen de Docker que se utilizará para desplegar la aplicación Flask (juanarillo/kubernetes_practica:v5).
+- replicas: Define el número de réplicas del despliegue (en este caso, 2).
+- message: Un mensaje personalizado que puede ser utilizado por la aplicación Flask (por ejemplo, en el contenido mostrado).
+- cpuLimit: El límite máximo de CPU asignado a cada réplica (500 millicores, o 0.5 CPU).
+- memoryLimit: El límite máximo de memoria RAM asignado a cada réplica (256 MB).
+
+**Sección service:**
+
+Define la configuración del servicio de Kubernetes que expone la aplicación.
+
+- type: El tipo de servicio, aquí configurado como NodePort, que permite acceder a la aplicación desde fuera del clúster.
+- port: El puerto en el que la aplicación Flask escucha internamente (5000).
+
+**Sección redis:**
+
+Configura la instancia de Redis utilizada por la aplicación.
+
+- image.repository: Especifica el repositorio de la imagen de Redis (en este caso, redis).
+- image.tag: Define la versión de Redis (7.0).
+- port: El puerto interno donde se ejecuta Redis (6379).
+- password: La contraseña de acceso a la instancia de Redis (mipassword).
+- persistentVolume.enabled: Indica si se habilita el almacenamiento persistente (valor true).
+- persistentVolume.size: Define el tamaño del volumen persistente (1 GiB).
+- persistentVolume.storageClass: La clase de almacenamiento a utilizar (standard).
+
+**Sección hpa (Horizontal Pod Autoscaler):**
+
+Configura el escalado horizontal automático de las réplicas.
+
+- enabled: Si está habilitado o no (false).
+- minReplicas: Número mínimo de réplicas cuando el HPA está habilitado (2).
+- maxReplicas: Número máximo de réplicas permitidas (5).
+- cpuThreshold: El umbral de utilización de CPU en porcentaje (70%) a partir del cual el HPA ajustará las réplicas.
+
+**Sección ingress:**
+
+Configura el acceso externo a la aplicación a través de un Ingress Controller.
+
+- enabled: Indica si el recurso Ingress está habilitado (true).
+- host: El nombre de host asignado para acceder a la aplicación (flask-app.local).
+
+## FINALIZACIÓN DESPLIEGUE
+
+Una vez se desea finalizar el despliegue se puede usar el comando *uninstall* de *Helm*.
+
+```bash
+helm uninstall flask-app
+
+# Siendo flask-app el nombre que le hayamos dado a la release.
+```
+
+También se puede borrar.
+
+```bash
+helm delete flask-app
+```
+
+Posteriormente podremos apagar minikube o borrarlo todo
+
+```bash
+minikube delete
+```

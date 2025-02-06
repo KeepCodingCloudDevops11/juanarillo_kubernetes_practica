@@ -25,7 +25,7 @@ redis:
 
 # HPA Configuración
 hpa:
-  enabled: false
+  enabled: true
   minReplicas: 2
   maxReplicas: 5
   cpuThreshold: 70
