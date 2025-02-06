@@ -98,9 +98,11 @@ La aplicación debe mostrar un texto variable al principio (establecido en el fi
     <img src="images/app.png" alt="architecture" width="500"/>
 </p>
 
+[Ver el video](/images/demo.mov)
+
 <p align="center">
     <video width="600" controls align="center">
-    <source src="/images/demo.mov" type="video/quicktime">
+    <source src="images/demo.mov" type="video/quicktime">
     Your browser does not support the video tag.
     </video>
 </p>
