@@ -146,7 +146,7 @@ Configura la instancia de Redis utilizada por la aplicación.
 
 Configura el escalado horizontal automático de las réplicas.
 
-- enabled: Si está habilitado o no (false).
+- enabled: Si está habilitado o no (true).
 - minReplicas: Número mínimo de réplicas cuando el HPA está habilitado (2).
 - maxReplicas: Número máximo de réplicas permitidas (5).
 - cpuThreshold: El umbral de utilización de CPU en porcentaje (70%) a partir del cual el HPA ajustará las réplicas.
