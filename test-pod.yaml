@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: test-pod
+spec:
+  selector:
+    matchLabels:
+      app: test-pod
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: test-pod
+    spec:
+      containers:
+      - name: busybox
+        image: busybox:1.28
+        command: ['sh']
+        args: ['-c', 'while sleep 0.01; do wget -q -O- http://flask-app:5000; done']

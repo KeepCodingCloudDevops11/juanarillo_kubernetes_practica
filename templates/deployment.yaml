@@ -15,6 +15,13 @@ spec:
       containers:
       - name: flask-app
         image: {{ .Values.flask.image }}
+        resources:
+            requests:
+              cpu: "{{ .Values.flask.cpuRequest }}"
+              memory: "{{ .Values.flask.memoryRequest }}"
+            limits:
+              cpu: "{{ .Values.flask.cpuLimit }}"
+              memory: "{{ .Values.flask.memoryLimit }}"
         ports:
         - containerPort: 5000
         env:

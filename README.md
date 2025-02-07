@@ -9,6 +9,7 @@ Práctica de Juan Arillo para el módulo de **Contenedores: Más que VMs Kuberne
 [Pasos previos](#pasos-previos)  
 [Funcionamiento](#funcionamiento)  
 [Ajustes](#ajustes)  
+[Prueba del escalado](#prueba-del-escalado)  
 [Finalización despliegue](#finalización-despliegue)
 
 ## DESCRIPCIÓN
@@ -120,8 +121,10 @@ Esta parte define la configuración principal de la aplicación Flask.
 - image: Especifica la imagen de Docker que se utilizará para desplegar la aplicación Flask (juanarillo/kubernetes_practica:v5).
 - replicas: Define el número de réplicas del despliegue (en este caso, 2).
 - message: Un mensaje personalizado que puede ser utilizado por la aplicación Flask (por ejemplo, en el contenido mostrado).
+- cpuRequest: Cantidad mínima de CPU asignado a cada réplica (250 millicores, o 0.25 CPU).
+- memoryRequest: Mínimo de memoria RAM asignado a cada réplica (256 MB).
 - cpuLimit: El límite máximo de CPU asignado a cada réplica (500 millicores, o 0.5 CPU).
-- memoryLimit: El límite máximo de memoria RAM asignado a cada réplica (256 MB).
+- memoryLimit: El límite máximo de memoria RAM asignado a cada réplica (512 MB).
 
 **Sección service:**
 
@@ -157,6 +160,36 @@ Configura el acceso externo a la aplicación a través de un Ingress Controller.
 
 - enabled: Indica si el recurso Ingress está habilitado (true).
 - host: El nombre de host asignado para acceder a la aplicación (flask-app.local).
+
+## PRUEBA DEL ESCALADO
+
+- Activar el addon de Metrics para minikube. El addon tardará un rato en arrancar el pod.
+
+```bash
+minikube addons enable metrics-server
+
+kubectl get pods -n kube-system # para ver cuando está arrancado el metrics-server
+```
+
+- Una vez arrancado, lanzamos el pod de tests que existe en este repositorio, y le ampliamos el número de réplicas para que aumente el porcentaje de cpu.
+
+```bash
+kubectl apply -f test-pod.yaml
+
+kubectl scale deployment test-pod --replicas 5
+```
+
+- Observamos el porcentaje de uso del hpa. Se irá actualizando cada poco tiempo.
+
+```bash
+kubectl get hpa -w
+```
+
+- Cuando se alcanza el límite alcanzado empezarán a crearse nuevos pod. Podemos observarlo mediante el siguiente comando.
+
+```bash
+kubectl get pods -w
+```
 
 ## FINALIZACIÓN DESPLIEGUE
 

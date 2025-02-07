@@ -3,8 +3,10 @@ flask:
   image: "juanarillo/kubernetes_practica:v5"
   replicas: 2
   message: "Este texto es una variable desde values.yaml"
-  cpuLimit: "500m"
-  memoryLimit: "256Mi"
+  cpuRequest: "125m"
+  memoryRequest: "256Mi"
+  cpuLimit: "250m"
+  memoryLimit: "512Mi"
 
 # Configuración del servicio
 service:
